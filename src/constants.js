@@ -1,0 +1,1 @@
+export const baseUrl = "https://assignment2-five-wine.vercel.app/"

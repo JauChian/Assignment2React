@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {baseUrl} from "../../constants";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
@@ -39,9 +39,11 @@ function CreateLecturer(props) {
             method: 'post',
             maxBodyLength: Infinity,
             url: baseUrl + 'api/lecturers/',
-            headers: {'Authorization': 'token ' + localStorage.getItem('token')},
+            headers: {'Authorization': 'token ' + localStorage.getItem('token'),
+            'Content-Type': 'application/json'},
             data: data
         };
+
 
         axios.request(config)
             .then((response) => {

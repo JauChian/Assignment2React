@@ -9,6 +9,7 @@ function CreateStudent(props) {
     const [last_name, setLastName] = useState("")
     const [email, setEmail] = useState("")
     const navigate = useNavigate();
+    const [token, setToken] = useState("")
 
     function DOBHandler(e) {
         setDOB(e.target.value)
@@ -25,6 +26,7 @@ function CreateStudent(props) {
     function emailHandler(e) {
         setEmail(e.target.value)
     }
+
 
     function createClass() {
         // Using the state values to create the data object

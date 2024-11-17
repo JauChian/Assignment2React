@@ -37,9 +37,9 @@ function StudentList(props) {
         let config = {
             method: 'get',
             maxBodyLength: Infinity,
-            url: baseUrl+'api/students/',
+            url: baseUrl + 'api/students/',
             headers: {
-                 'Authorization': 'token ' + localStorage.getItem('token')
+                'Authorization': 'token ' + localStorage.getItem('token')
             }
         };
 
@@ -72,30 +72,39 @@ function StudentList(props) {
                 console.log(error);
             });
     }
+
     return (
         <div>
             <h1>List of Student</h1>
             {error ? <p>{error}</p> : null}
             <div>
-                {userInfo && userInfo.user_group === 'admin' ? (
-                    <>
-                        <Link to={'/create_student'} className={'btn btn-success'}>Create a Student</Link>
-                        {students.map(student =>(
-                            <div key={student.id}>
-                                <Link to={`/student_detail/`} state={{id:student.id}}>
-                                    {student.id}-{student.first_name}-{student.last_name}
-                                </Link>
-                                <div>
-                                    <Link to={'/update_student '} state={{id: student.id}}
-                                          className={'btn btn-success'}>Update</Link>
-                                    <button onClick={() => deleteClass(student.id)} className={'btn btn-danger'}>Delete
-                                    </button>
+                {userInfo ? (
+                    userInfo.is_superuser || (userInfo.groups && userInfo.groups.includes('admin')) ? (
+                        <>
+                            <Link to={'/create_student'} className={'btn btn-success'}>Create a Student</Link>
+                            {students.map(student => (
+                                <div key={student.id}>
+                                    <Link to={`/student_detail/`} state={{id: student.id}}>
+                                        {student.id}-{student.first_name}-{student.last_name}
+                                    </Link>
+                                    <div>
+                                        <Link to={'/update_student '} state={{id: student.id}}
+                                              className={'btn btn-success'}>Update</Link>
+                                        <button onClick={() => deleteClass(student.id)}
+                                                className={'btn btn-danger'}>Delete
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </>
+                            ))}
+                        </>
+                    ) : (
+                        <>
+                            <p>Need to be admin to check infomation</p>
+                        </>
+                    )
                 ) : (
-                    <p>You have to be an admin to check info</p>
+                    // 如果没有 userInfo，返回此内容
+                    <p>No user information available</p>
                 )}
             </div>
         </div>

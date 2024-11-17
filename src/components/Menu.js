@@ -2,11 +2,13 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {baseUrl} from "../constants";
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 function Menu() {
+
     const [token, setToken] = useState("")
     const [loginStatus, setLoginStatus] = useState(false)
     const [error, setError] = useState("")
@@ -33,6 +35,7 @@ function Menu() {
                 })
                 .catch((error) => {
                     console.log(error);
+                    setError("Failed to fetch user info");
                 });
         }
 
@@ -47,30 +50,23 @@ function Menu() {
                     <Nav className="me-auto">
                         <Nav.Link href="/">Home</Nav.Link>
                         <Nav.Link href={'/login'}>Login</Nav.Link>
-
-                        {userInfo && userInfo.groups && userInfo.groups.includes('admin') && (
-                            <>
-                                <Nav.Link href={'/courses'}>Course</Nav.Link>
-                                <Nav.Link href={'/semesters'}>Semester</Nav.Link>
-                                <Nav.Link href={'/collegedays'}>College Day</Nav.Link>
-                                <Nav.Link href={'/classes'}>Class</Nav.Link>
-                                <Nav.Link href={'/lecturers'}>Lecturer</Nav.Link>
-                                <Nav.Link href={'/students'}>Student</Nav.Link>
-                            </>
+                        {userInfo ? (
+                            userInfo.is_superuser || (userInfo.groups && userInfo.groups.includes('admin')) ? (
+                                <>
+                                    {/* 仅管理员和超级用户可见的部分 */}
+                                    <Nav.Link href="/courses">Course</Nav.Link>
+                                    <Nav.Link href="/semesters">Semester</Nav.Link>
+                                    <Nav.Link href="/collegedays">College Day</Nav.Link>
+                                    <Nav.Link href="/classes">Class</Nav.Link>
+                                    <Nav.Link href="/lecturers">Lecturer</Nav.Link>
+                                    <Nav.Link href="/students">Student</Nav.Link>
+                                </>
+                            ) : (
+                                    <p>Not Admin</p>
+                            )
+                        ) : (
+                            <p>No user information</p>
                         )}
-
-                        <Nav.Link href="#link">Link</Nav.Link>
-                        <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.2">
-                                Another action
-                            </NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                            <NavDropdown.Divider/>
-                            <NavDropdown.Item href="#action/3.4">
-                                Separated link
-                            </NavDropdown.Item>
-                        </NavDropdown>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
